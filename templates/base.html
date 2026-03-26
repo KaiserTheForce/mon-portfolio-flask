@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Portfolio - {{ moi.prenom }} {{ moi.nom }}</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* VARIABLES CSS (Mode Clair par défaut) */
+    :root {
+      --bg-color: #f0f4f8; 
+      --primary: #2563eb; 
+      --primary-dark: #1e40af;
+      --secondary: #10b981; 
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --card-bg: #ffffff;
+      --card-border: rgba(0,0,0,0.05);
+    }
+
+    /* VARIABLES CSS (Mode Sombre - Activé par le JavaScript) */
+    body.dark-mode {
+      --bg-color: #0f172a; 
+      --primary: #3b82f6; 
+      --primary-dark: #60a5fa;
+      --text-main: #f8fafc; 
+      --text-muted: #94a3b8; 
+      --card-bg: #1e293b; 
+      --card-border: rgba(255,255,255,0.05);
+    }
+
+    /* CSS global */
+    body { font-family: 'Inter', 'Segoe UI', sans-serif; max-width: 1000px; margin: 0 auto; background: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; transition: background-color 0.4s, color 0.4s;}
+    
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    main { flex: 1; padding: 0 20px; animation: fadeIn 0.8s ease-out; }
+    
+    /* Navbar */
+    nav { background: var(--card-bg); padding: 15px 30px; border-radius: 50px; margin: 30px auto 50px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: flex; justify-content: center; align-items: center; gap: 20px; border: 1px solid var(--card-border); width: fit-content; transition: background-color 0.4s;}
+    nav a, nav button { color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 15px; transition: all 0.3s; background: none; border: none; cursor: pointer; padding: 10px; font-family: inherit;}
+    nav a:hover, nav button:hover { color: var(--primary); transform: translateY(-2px); }
+    nav a i, nav button i { margin-right: 8px; }
+    
+    #theme-toggle { background: var(--bg-color); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding: 0; margin-left: 15px;}
+    #theme-toggle i { margin: 0; }
+
+    /* Cartes */
+    .carte { background: var(--card-bg); padding: 45px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.04); margin-bottom: 40px; border: 1px solid var(--card-border); transition: background-color 0.4s;}
+    h1, h2, h3 { color: var(--text-main); margin-top: 0; font-weight: 800;}
+    
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+    
+    .badge { background: var(--primary); color: white; padding: 6px 14px; border-radius: 8px; margin: 5px 5px 10px 0; display: inline-block; font-size: 13px; font-weight: 600;}
+    .badge-tech { background: #e2e8f0; color: #475569; }
+    body.dark-mode .badge-tech { background: #334155; color: #cbd5e1; } 
+
+    /* Grille Projets */
+    .grille-projets { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px;}
+    .carte-projet { background: var(--card-bg); padding: 30px; border: 1px solid var(--card-border); border-radius: 16px; transition: all 0.4s; display: flex; flex-direction: column;}
+    .carte-projet:hover { transform: translateY(-10px); box-shadow: 0 20px 30px rgba(0,0,0,0.1); border-color: var(--primary);}
+    
+    /* Boutons */
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; text-decoration: none; border-radius: 10px; font-weight: 700; transition: all 0.3s; margin-right: 12px; margin-top: 20px; font-size: 14px; cursor: pointer; border: none; font-family: inherit;}
+    .btn i { margin-right: 8px; font-size: 16px; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);}
+    .btn-outline { border: 2px solid var(--text-muted); color: var(--text-main); background: transparent; }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-3px);}
+
+    footer { text-align: center; padding: 30px; margin-top: auto; color: var(--text-muted); font-size: 14px;}
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/"><i class="fa-solid fa-house"></i> Accueil</a>
+    <a href="/competences"><i class="fa-solid fa-code"></i> Compétences</a>
+    <a href="/projets"><i class="fa-solid fa-folder-open"></i> Projets</a>
+    
+    <!-- Bouton pour le mode sombre -->
+    <button id="theme-toggle" aria-label="Changer de thème" title="Mode sombre/clair">
+      <i class="fa-solid fa-moon"></i>
+    </button>
+  </nav>
+
+  <main>
+    {% block contenu %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>&copy; {{ annee }} <strong>{{ moi.prenom }} {{ moi.nom }}</strong></p>
+  </footer>
+
+  <!-- NOUVEAU JAVASCRIPT : AVEC LOCALSTORAGE POUR LA MÉMOIRE -->
+  <script>
+    const themeBtn = document.getElementById('theme-toggle');
+    const icone = themeBtn.querySelector('i');
+
+    // 1. AU CHARGEMENT DE LA PAGE : On lit la mémoire du navigateur
+    // Si l'utilisateur avait sauvegardé "dark", on active direct le mode sombre
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+      icone.classList.replace('fa-moon', 'fa-sun'); // On met l'icône soleil
+    }
+
+    // 2. AU CLIC SUR LE BOUTON : On change le mode ET on sauvegarde dans la mémoire
+    themeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      
+      if (document.body.classList.contains('dark-mode')) {
+        // Mode sombre activé
+        icone.classList.replace('fa-moon', 'fa-sun');
+        localStorage.setItem('theme', 'dark'); // 💾 On sauvegarde le choix "dark"
+      } else {
+        // Mode clair activé
+        icone.classList.replace('fa-sun', 'fa-moon');
+        localStorage.setItem('theme', 'light'); // 💾 On sauvegarde le choix "light"
+      }
+    });
+  </script>
+
+</body>
+</html>
